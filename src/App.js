@@ -8,8 +8,40 @@ import account from './assets/rocket.svg'
 import sendBtn from './assets/send.svg'
 import userIcon from './assets/user-icon.png'
 import gptImgLogo from './assets/chatgptLogo.svg'
+import { sendMsg } from './llama';
+import { useEffect, useRef, useState } from 'react';
 
 function App() {
+  const msgEnd = useRef(null);
+
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState([
+    {
+      text: "Hi, I am a chatbot based on LLamA 2. Ask anything you want.",
+      isBot: true
+    }
+  ]);
+
+  useEffect(() => {
+    msgEnd.current.scrollIntoView();
+  }, [messages]);
+
+  const handleSend = async () => {
+    const text = input;
+    setInput('');
+    setMessages([...messages, {text, isBot:false}]);
+    const res = await sendMsg(text);
+    setMessages([
+      ...messages,
+      { text, isBot: false },
+      { text: res, isBot: true }
+    ]);
+  }
+
+  const handleEnter = async (e) => {
+    if (e.key === 'Enter') await handleSend();
+  }
+
   return (
     <div className="App">
       <div className="sideBar">
@@ -18,7 +50,7 @@ function App() {
             <img src={logo} alt='logo' className='logo' />
             <span className='brand'>ChatGPT</span>
           </div>
-          <button className='newChat'> <img src={addBtn} alt='new chat' className='addBtn' />new chat</button>
+          <button className='newChat' onClick={()=>{window.location.reload()}}> <img src={addBtn} alt='new chat' className='addBtn' />new chat</button>
           <div className='upperSideBottom'>
             <button className='query'> <img src={msgIcon} alt='query' />How did we get here?</button>
             <button className='query'> <img src={msgIcon} alt='query' />Why did we get here?</button>
@@ -32,16 +64,18 @@ function App() {
       </div>
       <div className='main'>
         <div className='chats'>
-          <div className='chat'>
-            <img className='chatImg' src={userIcon} alt='' /><p className='txt'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. </p>
-          </div>
-          <div className='chat bot'>
-            <img className='chatImg' src={gptImgLogo} alt='' /><p className='txt'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed erat erat. Fusce tempus sem quis dolor pulvinar pretium. In felis est, lacinia sed commodo id, convallis sed mi. In finibus finibus mauris, nec ornare turpis fringilla id. Morbi lobortis euismod augue. </p>
-          </div>
+
+          {messages.map((message, i) => 
+            <div key = {i} className={message.isBot ? 'chat bot' : 'chat'}>
+              <img className='chatImg' src={message.isBot ? gptImgLogo : userIcon} alt='' /><p className='txt'>{message.text}</p>
+            </div>
+          )}
+
+          <div ref = {msgEnd} />
         </div>
         <div className='chatFooter'>
           <div className='inp'>
-            <input type='text' placeholder='Type your prompt...' /><button className='send'><img src={sendBtn} alt='send arrow' /></button>
+            <input type='text' placeholder='Type your prompt...' value={input} onKeyDown = {handleEnter} onChange={(e) => { setInput(e.target.value) }} /><button className='send' onClick={handleSend}><img src={sendBtn} alt='send arrow' /></button>
           </div>
           <p>Made by Sarthak Tanwar for fun</p>
         </div>
