@@ -1,5 +1,4 @@
 import './App.css';
-import logo from './assets/chatgpt.svg'
 import addBtn from './assets/add-30.png'
 import msgIcon from './assets/message.svg'
 import home from './assets/home.svg'
@@ -7,7 +6,8 @@ import saved from './assets/bookmark.svg'
 import account from './assets/rocket.svg'
 import sendBtn from './assets/send.svg'
 import userIcon from './assets/user-icon.png'
-import gptImgLogo from './assets/chatgptLogo.svg'
+import llamaLogo from './assets/llamaLogo.webp'
+import aiIcon from './assets/terminator.jpeg'
 import { sendMsg } from './llama';
 import { useEffect, useRef, useState } from 'react';
 
@@ -17,7 +17,7 @@ function App() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([
     {
-      text: "Hi, I am a chatbot based on LLamA 2. Ask anything you want.",
+      text: "Hi, I am a chatbot based on LLaMA-2. Ask anything you want.",
       isBot: true
     }
   ]);
@@ -47,8 +47,8 @@ function App() {
       <div className="sideBar">
         <div className='upperSide'>
           <div className='upperSideTop'>
-            <img src={logo} alt='logo' className='logo' />
-            <span className='brand'>ChatGPT</span>
+            <img src={llamaLogo} alt='logo' className='logo' />
+            <span className='brand'>LLaMA Playground</span>
           </div>
           <button className='newChat' onClick={()=>{window.location.reload()}}> <img src={addBtn} alt='new chat' className='addBtn' />new chat</button>
           <div className='upperSideBottom'>
@@ -67,7 +67,7 @@ function App() {
 
           {messages.map((message, i) => 
             <div key = {i} className={message.isBot ? 'chat bot' : 'chat'}>
-              <img className='chatImg' src={message.isBot ? gptImgLogo : userIcon} alt='' /><p className='txt'>{message.text}</p>
+              <img className='chatImg' src={message.isBot ? aiIcon : userIcon} alt='' /><p className='txt'>{message.text}</p>
             </div>
           )}
 

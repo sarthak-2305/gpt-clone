@@ -30,6 +30,9 @@ body {
 
 .logo {
   margin-right: 1rem;
+  width: 41px;
+  height: 41px;
+  border-radius: 20px;
 }
 
 .brand {
@@ -101,14 +104,6 @@ body {
   margin: 1rem;
   padding-right: 1rem;
 }
-/* 
-.listItems:nth-child(1) >.listItemsImg {
-  margin-right: 0.5rem;
-}
-
-.listItems:nth-child(3) >.listItemsImg {
-  margin-right: 0.75rem;
-} */
 
 .main {
   min-height: calc(100vh - 14rem);
@@ -121,7 +116,7 @@ body {
 
 .chats {
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-behavior: smooth;
   width: 100%;
   max-width: 90rem;
