@@ -1,15 +1,11 @@
 import './App.css';
-import addBtn from './assets/add-30.png'
-import msgIcon from './assets/message.svg'
-import home from './assets/home.svg'
-import saved from './assets/bookmark.svg'
-import account from './assets/rocket.svg'
+import SideBar from './SideBar'
 import sendBtn from './assets/send.svg'
 import userIcon from './assets/user-icon.png'
-import llamaLogo from './assets/llamaLogo.webp'
 import aiIcon from './assets/terminator.jpeg'
 import { sendMsg } from './llama';
 import { useEffect, useRef, useState } from 'react';
+
 
 let context = null;
 function App() {
@@ -32,13 +28,23 @@ function App() {
     setInput('');
     setMessages([...messages, { text, isBot: false }]);
     // console.log("Before context is app: " + context);
-    const [res, newContext] = await sendMsg(text, context);
-    context = newContext;
-    setMessages([
-      ...messages,
-      { text, isBot: false },
-      { text: res, isBot: true }
-    ]);
+
+    try {
+      const [res, newContext] = await sendMsg(text, context);
+      context = newContext;
+      setMessages([
+        ...messages,
+        { text, isBot: false },
+        { text: res, isBot: true }
+      ]);
+    } catch (error) {
+      const errMsg = "The server is down, try starting it.";
+      setMessages([
+        ...messages, 
+        {text, isBot: false}, 
+        {text: errMsg, isBot: true}
+      ]);
+    }
     // console.log(messages);
     // console.log("After context in app: " + context);
   }
@@ -49,24 +55,7 @@ function App() {
 
   return (
     <div className="App">
-      <div className="sideBar">
-        <div className='upperSide'>
-          <div className='upperSideTop'>
-            <img src={llamaLogo} alt='logo' className='logo' />
-            <span className='brand'>LLaMA Playground</span>
-          </div>
-          <button className='newChat' onClick={() => { window.location.reload() }}> <img src={addBtn} alt='new chat' className='addBtn' />new chat</button>
-          <div className='upperSideBottom'>
-            <button className='query'> <img src={msgIcon} alt='query' />How did we get here?</button>
-            <button className='query'> <img src={msgIcon} alt='query' />Why did we get here?</button>
-          </div>
-        </div>
-        <div className='lowerSide'>
-          <div className='listItems'><img src={home} alt='home' className='listItemsImg' />Home</div>
-          <div className='listItems'><img src={saved} alt='saved' className='listItemsImg' />Saved</div>
-          <div className='listItems'><img src={account} alt='account' className='listItemsImg' />Account</div>
-        </div>
-      </div>
+      <SideBar />
       <div className='main'>
         <div className='chats'>
 

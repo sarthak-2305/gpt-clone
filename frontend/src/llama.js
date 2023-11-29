@@ -23,6 +23,6 @@ export async function sendMsg(message, context) {
 
     } catch (error) {
         console.error("Error fetching data, server probably down");
-        return "The server is down, try starting it."
+        throw new Error("The server is down, try starting it.");
     }
 }
